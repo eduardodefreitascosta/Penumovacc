@@ -1,0 +1,469 @@
+---
+title: "Summary report for data challenge"
+author: "Eduardo de Freitas Costa"
+date: '`r format(Sys.Date(), "%Y-%m-%d")`'
+output:
+  html_document:
+    df_print: paged
+    code_folding: hide
+    toc: yes
+    toc_depth: 3
+---
+
+```{r}
+
+#header #################################################################################
+#'Incidencia8_11.Rmd'
+
+#Title: title
+#Project ID: pid
+#Client: client
+#Author: <Eduardo> <Costa>, UFRGS
+
+#Description: description
+
+#Start date: date
+#Last Update: {6:date}
+
+#R version: r.version
+#Scriptversion: version
+
+#Dependencies
+#<-Downstream
+ #-Main.R
+#->Upstream
+
+
+#Input:
+#- "Data/Processed/inc_fin.csv"
+
+#Output:
+#- "Figures/Fig1.jpg"
+#- "Figures/Fig2.jpg"
+#- "Output/incidence.csv"
+
+#Peer reviewer(s)
+
+#Please ensure directories are relative. Please comment code sufficiently.
+
+#Script start#############################################################################
+
+```
+
+
+
+```{r setup, include=FALSE}
+
+
+# Define knitr options ########################################################
+
+# global options
+knitr::opts_chunk$set(message = FALSE)    # code default outputs
+knitr::opts_chunk$set(warning = FALSE)    # code warnings
+knitr::opts_chunk$set(echo = TRUE)        # code chunks show
+```
+
+
+
+```{r, include=FALSE}
+
+# Loading and preparing the data
+
+db <- read.csv(here("Data","Processed" ,"inc_fin.csv"))
+db2 <- read.csv(here("Data", "Processed","conf_inc.csv"))
+
+#View(db)
+#View(db2)
+str(db)
+#str(db2)
+
+colnames(db)[1]<-"time_line"
+
+db$time_line<-as.Date(db$time_line)
+db2$dataa<-as.Date(db2$dataa)
+
+
+str(db)
+#str(db2)
+
+```
+
+# Descriptive
+```{r, echo=FALSE}
+## Full plots
+vac<-c(rep(0,108),rep(1,108))
+vac<-ts(vac,start=c(2002,1), end=c(2019, 12), frequency = 12) 
+
+
+plot_data<-cbind(db[,c(1,2,3,4,14,15,16,13)],vac)
+
+colnames(plot_data)<-c("data","<1","1-4","5-9","10-19","20-59","60-79",">80","Vac")
+
+plot_data1<-plot_data%>%
+  gather(key="Age",value="incidence",-data,-Vac)
+
+
+for(i in 2:dim(db)[1]){
+  db$year[1]<-2002
+  db$year[i]<-db$year[i-1]+(1/12)
+}
+
+
+
+lab<-c("Before", "After")
+col<-c('black','darkgray')
+
+theme_set(theme_minimal())
+a<-ggplot(data=db,aes(x=year,y=flt01,colour=as.factor(vac)))+
+  geom_point()+
+  annotate("text",x=db$year[103], y=max(db$flt01)+30, label= "2010",size=2.8)+
+  #geom_smooth(method = "lm") +
+  geom_rect(data=db,aes(xmin = year[97], xmax = year[109], ymin = -Inf, ymax = Inf),
+            fill = "lightgray", alpha = 0.02,linetype=0)+
+  xlab("Time (years)") + 
+  ylab("Inc. rate/100000 inhab.")+
+  guides(col=guide_legend(title="Vaccine"))+
+  scale_x_continuous(breaks = seq(2003,2019,2))+
+  scale_color_manual(breaks = c(0, 1),
+  labels = lab,values=col)+
+  theme(text = element_text(size=15))+
+  ggtitle(label = "<1 years age group")
+
+
+
+b<-ggplot(data=db,aes(x=year,y=f0104,colour=as.factor(vac)))+
+  geom_point()+
+  annotate("text",x=db$year[103], y=max(db$f0104)+30, label= "2010",size=2.8)+
+  #geom_smooth(method = "lm") +
+  geom_rect(data=db,aes(xmin = year[97], xmax = year[109], ymin = -Inf, ymax = Inf),
+            fill = "lightgray", alpha = 0.02,linetype=0)+
+            xlab("Time (years)") + 
+            ylab("Inc. rate/100000 inhab.")+
+            guides(col=guide_legend(title="Vaccine"))+
+            scale_x_continuous(breaks = seq(2003,2019,2))+
+  scale_color_manual(breaks = c(0, 1),
+  labels = lab,values=col)+
+  theme(text = element_text(size=15))+
+  ggtitle(label = "1-4 years age group")
+
+  
+  
+  
+c<-ggplot(data=db,aes(x=year,y=f0509,colour=as.factor(vac)))+
+  geom_point()+
+  geom_jitter(width = 0.5)+
+  annotate("text",x=db$year[103], y=max(db$f0509)+5, label= "2010",size=2.8)+
+  #geom_smooth(method = "lm") +
+  geom_rect(data=db,aes(xmin = year[97], xmax = year[109], ymin = -Inf, ymax = Inf),
+            fill = "lightgray", alpha = 0.02,linetype=0)+
+            xlab("Time (years)") + 
+            ylab("Inc. rate/100000 inhab.")+
+            guides(col=guide_legend(title="Vaccine"))+
+            scale_x_continuous(breaks = seq(2003,2019,2))+
+  scale_color_manual(breaks = c(0, 1),
+  labels = lab,values=col)+
+  theme(text = element_text(size=15))+
+  ggtitle(label = "5-9 years age group")
+
+  
+jpeg(here("Figures","Fig1.jpg"), height = 10, width = 20, units = 'in', res=300)
+
+theme_set(theme_minimal())
+grid.arrange(a,b,c, nrow = 3)
+
+dev.off()
+
+
+d<-ggplot(data=db,aes(x=time_line,y=f1019,colour=as.factor(vac)))+
+  geom_point()+
+  geom_jitter(width = 0.5)+
+  annotate("text",x=db$time_line[102], y=max(db$f1019)+2, label= "2010",size=2.8)+
+  geom_smooth(method = "lm") +
+  geom_rect(data=db,aes(xmin = time_line[96], xmax = time_line[108], ymin = -Inf, ymax = Inf),
+            fill = "lightgray", alpha = 0.02,linetype=0)+
+            xlab("Time (years)") + 
+            ylab("Inc. rate/100000 inhab.")+
+            guides(col=guide_legend(title="Vaccine"))+
+            scale_x_date(date_breaks = "2 year",  date_labels = "%y")+
+  scale_color_manual(breaks = c(0, 1),
+  labels = lab,values=col)+
+  ggtitle(label = "10-19 years age group")
+
+
+  
+e<-ggplot(data=db,aes(x=time_line,y=f2059,colour=as.factor(vac)))+
+  geom_point()+
+  geom_jitter(width = 0.5)+
+  annotate("text",x=db$time_line[102], y=max(db$f2059)+2, label= "2010",size=2.8)+
+  geom_smooth(method = "lm") +
+  geom_rect(data=db,aes(xmin = time_line[96], xmax = time_line[108], ymin = -Inf, ymax = Inf),
+            fill = "lightgray", alpha = 0.02,linetype=0)+
+            xlab("Time (years)") + 
+            ylab("Inc. rate/100000 inhab.")+
+            guides(col=guide_legend(title="Vaccine"))+
+            scale_x_date(date_breaks = "2 year",  date_labels = "%y")+
+  scale_color_manual(breaks = c(0, 1),
+  labels = lab,values=col)+
+  ggtitle(label = "20-59 years age group")
+
+  
+ 
+
+f<-ggplot(data=db,aes(x=time_line,y=f6079,colour=as.factor(vac)))+
+  geom_point()+
+  geom_jitter(width = 0.5)+
+  annotate("text",x=db$time_line[102], y=max(db$f6079)+2, label= "2010",size=2.8)+
+  geom_smooth(method = "lm") +
+  geom_rect(data=db,aes(xmin = time_line[96], xmax = time_line[108], ymin = -Inf, ymax = Inf),
+            fill = "lightgray", alpha = 0.02,linetype=0)+
+            xlab("Time (years)") + 
+            ylab("Inc. rate/100000 inhab.")+
+            guides(col=guide_legend(title="Vaccine"))+
+            scale_x_date(date_breaks = "2 year",  date_labels = "%y")+
+  scale_color_manual(breaks = c(0, 1),
+  labels = lab,values=col)+
+  ggtitle(label = "60-79 years age group")
+
+  
+g<-ggplot(data=db,aes(x=time_line,y=fmm80,colour=as.factor(vac)))+
+  geom_point()+
+  geom_jitter(width = 0.5)+
+  annotate("text",x=db$time_line[102], y=max(db$fmm80)+2, label= "2010",size=2.8)+
+  geom_smooth(method = "lm") +
+  geom_rect(data=db,aes(xmin = time_line[96], xmax = time_line[108], ymin = -Inf, ymax = Inf),
+            fill = "lightgray", alpha = 0.02,linetype=0)+
+            xlab("Time (years)") + 
+            ylab("Inc. rate/100000 inhab.")+
+            guides(col=guide_legend(title="Vaccine"))+
+            scale_x_date(date_breaks = "2 year",  date_labels = "%y")+
+  scale_color_manual(breaks = c(0, 1),
+  labels = lab,values=col)+
+  ggtitle(label = ">80 years age group")
+
+jpeg(here("Figures","Fig2.jpg"), height = 10, width = 20, units = 'in', res=300)
+
+theme_set(theme_minimal())
+grid.arrange(d,e,f,g, nrow = 2)
+
+dev.off()
+
+
+
+```
+
+
+## Auto-correlation
+```{r, include=FALSE}
+
+ts_flt01 <- ts(db$flt01, start=c(2002,1), end=c(2019, 12), frequency = 12 )
+ts_f0104 <- ts(db$f0104, start=c(2002,1), end=c(2019, 12), frequency = 12 )
+ts_f0509 <- ts(db$f0509, start=c(2002,1), end=c(2019, 12), frequency = 12 )
+ts_f1019 <- ts(db$f1019, start=c(2002,1), end=c(2019, 12), frequency = 12 )
+
+ts_f2059 <- ts(db$f2059, start=c(2002,1), end=c(2019, 12), frequency = 12 )
+
+ts_f6069 <- ts(db$f6069, start=c(2002,1), end=c(2019, 12), frequency = 12 )
+ts_f7079 <- ts(db$f7079, start=c(2002,1), end=c(2019, 12), frequency = 12 )
+ts_fmm80 <- ts(db$fmm80, start=c(2002,1), end=c(2019, 12), frequency = 12 )
+
+
+plot(acf((ts_flt01),lag=100))
+plot(acf((ts_f0104),lag=100))
+plot(acf((ts_f0509),lag=100))
+plot(acf((ts_f1019),lag=100))
+plot(acf((ts_f2059),lag=100))
+plot(acf((ts_f6069),lag=100))
+plot(acf((ts_f7079),lag=100))
+plot(acf((ts_fmm80),lag=100))
+
+
+plot(pacf((ts_flt01)),lag=100)
+plot(pacf((ts_f0104)))
+plot(pacf((ts_f0509)))
+plot(pacf((ts_f1019)))
+
+plot(pacf((ts_f2059)))
+plot(pacf((ts_f6069)))
+plot(pacf((ts_f7079)))
+plot(pacf((ts_fmm80)))
+
+```
+
+## Box-plots of sazonality
+
+```{r ,include=FALSE}
+
+boxplot(ts_flt01~cycle(ts_flt01),ylab='Incid?ncia',xlab='Meses')
+boxplot(ts_f0104~cycle(ts_f0104),ylab='Incid?ncia',xlab='Meses')
+boxplot(ts_f0509~cycle(ts_f0509),ylab='Incid?ncia',xlab='Meses')
+boxplot(ts_f1019~cycle(ts_f1019),ylab='Incid?ncia',xlab='Meses')
+boxplot(ts_f2059~cycle(ts_f2059),ylab='Incid?ncia',xlab='Meses')
+boxplot(ts_f6069~cycle(ts_f6069),ylab='Incid?ncia',xlab='Meses')
+boxplot(ts_f7079~cycle(ts_f7079),ylab='Incid?ncia',xlab='Meses')
+boxplot(ts_fmm80~cycle(ts_fmm80),ylab='Incid?ncia',xlab='Meses')
+```
+
+
+
+## "Augmented Dickey-Fuller" test 
+**a** $H_0:$ reject the null hypotheses (*i.e.* no stationary), concluding stochasticity in the series.
+
+```{r, include=FALSE}
+adf.test(ts_flt01)$p.value
+adf.test(ts_f0104)$p.value
+adf.test(ts_f0509)$p.value
+adf.test(ts_f1019)$p.value
+adf.test(ts_f2059)$p.value
+adf.test(ts_f6069)$p.value
+adf.test(ts_f7079)$p.value
+adf.test(ts_fmm80)$p.value
+```
+
+
+## Tests for cicles: G statistics of Fisher
+**a*** $H_0:$ states that there is no seasonality, thus, we reject the null hypothesis and conclude that there is seazonality.
+```{r, include=FALSE}
+
+fisher.g.test (ts_flt01)
+fisher.g.test (ts_f0104)
+fisher.g.test (ts_f0509)
+fisher.g.test (ts_f1019)
+
+fisher.g.test (ts_f2059)
+fisher.g.test (ts_f6069)
+fisher.g.test (ts_f7079)
+fisher.g.test (ts_fmm80)
+```
+
+
+# Dinamic regressions
+**a** see R support about the library dynlm (http://cran.r-project.org/web/packages/dynlm/dynlm.pdf)
+
+
+## Multivariable with trend, seazonality and vaccin
+```{r, echo=FALSE, fig.width=13}
+
+vac<-c(rep(0,108),rep(1,108))
+vac<-ts(vac,start=c(2002,1), end=c(2019, 12), frequency = 12) 
+
+
+time_set<-cbind(db[,c(1,2,3,4,14,15,16,13)],vac)
+
+time_set2<-cbind(db2[,c(1,2,3,4,14,15,16,13)],vac)
+
+
+
+strCols = names(time_set)
+formula4 <- list(); model4 <- list()
+for (j in 2:8){
+
+  
+  formula4[[j]] = paste0(strCols[j], " ~ ", 'Full')
+  model4[[j]] =( dynlm ( 
+         ts(time_set[,j],start=c(2002,1), end=c(2019, 12), frequency = 12)
+          ~ 
+           season(ts(time_set[,j],start=c(2002,1), end=c(2019, 12), frequency = 12))+
+           trend(ts(time_set[,j],start=c(2002,1), end=c(2019, 12), frequency = 12))*factor(vac)+
+           ts(time_set2[,j],start=c(2002,1), end=c(2019, 12), frequency = 12)+
+           L(ts(time_set[,j],start=c(2002,1), end=c(2019, 12), frequency = 12) ,1:2)+
+           L(ts(time_set2[,j],start=c(2002,1), end=c(2019, 12), frequency = 12),1)
+         ))
+
+}
+
+
+
+resumo<-list()
+for (j in 2:8){
+
+  
+    resumo[[j]]=summary(model4[[j]]) 
+}
+
+names(resumo)<-formula4
+
+for(j in 2:8){
+rownames(resumo[[j]]$coefficients)<-c("Intercepto","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez","Trend","vac","Confoun","L1","L2","Lc1","vac*trend")
+}
+
+
+
+jun=list(resumo[[2]]$coefficients,resumo[[3]]$coefficients,resumo[[4]]$coefficients,resumo[[5]]$coefficients,resumo[[6]]$coefficients,resumo[[7]]$coefficients,resumo[[8]]$coefficients)
+
+names(jun)<-c(names(resumo)[[2]],names(resumo)[[3]],names(resumo)[[4]],names(resumo)[[5]],names(resumo)[[6]],names(resumo)[[7]],names(resumo)[[8]])
+
+
+write.csv(jun,here("Output", "incidence.csv"))
+
+#jun1<-as.data.frame(jun)
+
+
+kable(jun,digits = 2, "html") %>%
+  kable_styling(full_width = F)
+
+
+descrip<-cbind(
+round(c(jun$`flt01 ~ Full`[c(13),c(1)],jun$`flt01 ~ Full`[c(19),c(1)],jun$`flt01 ~ Full`[c(19),c(4)]),3),
+round(c(jun$`f0104 ~ Full`[c(13),c(1)],jun$`f0104 ~ Full`[c(19),c(1)],jun$`f0104 ~ Full`[c(19),c(4)]),3),
+round(c(jun$`f0509 ~ Full`[c(13),c(1)],jun$`f0509 ~ Full`[c(19),c(1)],jun$`f0509 ~ Full`[c(19),c(4)]),3),
+
+round(c(jun$`f1019 ~ Full`[c(13),c(1)],jun$`f1019 ~ Full`[c(19),c(1)],jun$`f1019 ~ Full`[c(19),c(4)]),3),
+round(c(jun$`f2059 ~ Full`[c(13),c(1)],jun$`f2059 ~ Full`[c(19),c(1)],jun$`f2059 ~ Full`[c(19),c(4)]),3),
+round(c(jun$`f6079 ~ Full`[c(13),c(1)],jun$`f6079 ~ Full`[c(19),c(1)],jun$`f6079 ~ Full`[c(19),c(4)]),3),
+
+round(c(jun$`fmm80 ~ Full`[c(13),c(1)],jun$`fmm80 ~ Full`[c(19),c(1)],jun$`fmm80 ~ Full`[c(19),c(4)]),3)
+)
+
+
+```
+
+
+
+## Residuals and auto-correlation
+```{r ,include=FALSE}
+plot(model4[[2]])
+plot(model4[[3]])
+plot(model4[[4]])
+plot(model4[[5]])
+plot(model4[[6]])
+plot(model4[[7]])
+plot(model4[[8]])
+
+
+plot(acf(model4[[2]]$residuals),lag=100)
+plot(acf(model4[[3]]$residuals),lag=100)
+plot(acf(model4[[4]]$residuals),lag=100)
+plot(acf(model4[[5]]$residuals),lag=100)
+plot(acf(model4[[6]]$residuals),lag=100)
+plot(acf(model4[[7]]$residuals),lag=100)
+plot(acf(model4[[8]]$residuals),lag=100)
+
+
+plot(pacf(model4[[2]]$residuals))
+plot(pacf(model4[[3]]$residuals))
+plot(pacf(model4[[4]]$residuals))
+plot(pacf(model4[[5]]$residuals))
+plot(pacf(model4[[6]]$residuals))
+plot(pacf(model4[[7]]$residuals))
+plot(pacf(model4[[8]]$residuals))
+
+
+vif(model4[[2]])
+vif(model4[[3]])
+vif(model4[[4]])
+vif(model4[[5]])
+vif(model4[[6]])
+vif(model4[[7]])
+vif(model4[[8]])
+
+dwtest(model4[[2]])
+dwtest(model4[[3]])
+dwtest(model4[[4]])
+dwtest(model4[[5]])
+dwtest(model4[[6]])
+dwtest(model4[[7]])
+dwtest(model4[[8]])
+
+```
+
+
