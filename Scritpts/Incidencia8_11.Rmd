@@ -115,8 +115,8 @@ col<-c('black','darkgray')
 
 theme_set(theme_minimal())
 a<-ggplot(data=db,aes(x=year,y=flt01,colour=as.factor(vac)))+
-  geom_point()+
-  annotate("text",x=db$year[103], y=max(db$flt01)+30, label= "2010",size=2.8)+
+  geom_line()+
+  annotate("text",x=db$year[103], y=max(db$flt01)+30, label= "2010",size=4)+
   #geom_smooth(method = "lm") +
   geom_rect(data=db,aes(xmin = year[97], xmax = year[109], ymin = -Inf, ymax = Inf),
             fill = "lightgray", alpha = 0.02,linetype=0)+
@@ -126,14 +126,18 @@ a<-ggplot(data=db,aes(x=year,y=flt01,colour=as.factor(vac)))+
   scale_x_continuous(breaks = seq(2003,2019,2))+
   scale_color_manual(breaks = c(0, 1),
   labels = lab,values=col)+
-  theme(text = element_text(size=15))+
+    theme(plot.title = element_text(size = 17),
+          legend.text = element_text(size = 17),
+          legend.title = element_text(size = 17),
+          axis.title = element_text(size = 19),
+          axis.text = element_text(size = 18))+
   ggtitle(label = "<1 years age group")
 
 
 
 b<-ggplot(data=db,aes(x=year,y=f0104,colour=as.factor(vac)))+
-  geom_point()+
-  annotate("text",x=db$year[103], y=max(db$f0104)+30, label= "2010",size=2.8)+
+  geom_line()+
+  annotate("text",x=db$year[103], y=max(db$f0104)+30, label= "2010",size=4)+
   #geom_smooth(method = "lm") +
   geom_rect(data=db,aes(xmin = year[97], xmax = year[109], ymin = -Inf, ymax = Inf),
             fill = "lightgray", alpha = 0.02,linetype=0)+
@@ -143,102 +147,125 @@ b<-ggplot(data=db,aes(x=year,y=f0104,colour=as.factor(vac)))+
             scale_x_continuous(breaks = seq(2003,2019,2))+
   scale_color_manual(breaks = c(0, 1),
   labels = lab,values=col)+
-  theme(text = element_text(size=15))+
+    theme(plot.title = element_text(size = 17),
+          legend.text = element_text(size = 17),
+          legend.title = element_text(size = 17),
+          axis.title = element_text(size = 19),
+          axis.text = element_text(size = 18))+
   ggtitle(label = "1-4 years age group")
 
   
   
   
 c<-ggplot(data=db,aes(x=year,y=f0509,colour=as.factor(vac)))+
-  geom_point()+
-  geom_jitter(width = 0.5)+
-  annotate("text",x=db$year[103], y=max(db$f0509)+5, label= "2010",size=2.8)+
+  geom_line()+
+  #geom_jitter(width = 0.5)+
+  annotate("text",x=db$year[103], y=max(db$f0509)+5, label= "2010",size=4)+
   #geom_smooth(method = "lm") +
   geom_rect(data=db,aes(xmin = year[97], xmax = year[109], ymin = -Inf, ymax = Inf),
             fill = "lightgray", alpha = 0.02,linetype=0)+
-            xlab("Time (years)") + 
-            ylab("Inc. rate/100000 inhab.")+
             guides(col=guide_legend(title="Vaccine"))+
             scale_x_continuous(breaks = seq(2003,2019,2))+
   scale_color_manual(breaks = c(0, 1),
   labels = lab,values=col)+
-  theme(text = element_text(size=15))+
+   labs(x = "Time (years)", y = "Inc. rate/100000 inhab.") +
+    theme(plot.title = element_text(size = 17),
+          legend.text = element_text(size = 17),
+          legend.title = element_text(size = 17),
+          axis.title = element_text(size = 19),
+          axis.text = element_text(size = 18))+
   ggtitle(label = "5-9 years age group")
 
   
 jpeg(here("Figures","Fig1.jpg"), height = 10, width = 20, units = 'in', res=300)
 
 theme_set(theme_minimal())
-grid.arrange(a,b,c, nrow = 3)
+grid.arrange(a,b,c, nrow = 2)
 
 dev.off()
 
 
-d<-ggplot(data=db,aes(x=time_line,y=f1019,colour=as.factor(vac)))+
-  geom_point()+
-  geom_jitter(width = 0.5)+
-  annotate("text",x=db$time_line[102], y=max(db$f1019)+2, label= "2010",size=2.8)+
-  geom_smooth(method = "lm") +
-  geom_rect(data=db,aes(xmin = time_line[96], xmax = time_line[108], ymin = -Inf, ymax = Inf),
+d<-ggplot(data=db,aes(x=year,y=f1019,colour=as.factor(vac)))+
+  geom_line()+
+  #geom_jitter(width = 0.5)+
+  annotate("text",x=db$year[102], y=max(db$f1019)+2, label= "2010",size=4)+
+  #geom_smooth(method = "lm") +
+  geom_rect(data=db,aes(xmin = year[97], xmax = year[109], ymin = -Inf, ymax = Inf),
             fill = "lightgray", alpha = 0.02,linetype=0)+
-            xlab("Time (years)") + 
-            ylab("Inc. rate/100000 inhab.")+
             guides(col=guide_legend(title="Vaccine"))+
-            scale_x_date(date_breaks = "2 year",  date_labels = "%y")+
+            scale_x_continuous(breaks = seq(2003,2019,2))+
   scale_color_manual(breaks = c(0, 1),
   labels = lab,values=col)+
+   labs(x = "Time (years)", y = "Inc. rate/100000 inhab.") +
+    theme(plot.title = element_text(size = 17),
+          legend.text = element_text(size = 17),
+          legend.title = element_text(size = 17),
+          axis.title = element_text(size = 19),
+          axis.text = element_text(size = 18))+
   ggtitle(label = "10-19 years age group")
 
 
   
-e<-ggplot(data=db,aes(x=time_line,y=f2059,colour=as.factor(vac)))+
-  geom_point()+
-  geom_jitter(width = 0.5)+
-  annotate("text",x=db$time_line[102], y=max(db$f2059)+2, label= "2010",size=2.8)+
-  geom_smooth(method = "lm") +
-  geom_rect(data=db,aes(xmin = time_line[96], xmax = time_line[108], ymin = -Inf, ymax = Inf),
+e<-ggplot(data=db,aes(x=year,y=f2059,colour=as.factor(vac)))+
+  geom_line()+
+  #geom_jitter(width = 0.5)+
+  annotate("text",x=db$year[102], y=max(db$f2059)+2, label= "2010",size=4)+
+  #geom_smooth(method = "lm") +
+  geom_rect(data=db,aes(xmin = year[97], xmax = year[109], ymin = -Inf, ymax = Inf),
             fill = "lightgray", alpha = 0.02,linetype=0)+
-            xlab("Time (years)") + 
-            ylab("Inc. rate/100000 inhab.")+
             guides(col=guide_legend(title="Vaccine"))+
-            scale_x_date(date_breaks = "2 year",  date_labels = "%y")+
+            scale_x_continuous(breaks = seq(2003,2019,2))+
   scale_color_manual(breaks = c(0, 1),
   labels = lab,values=col)+
+   labs(x = "Time (years)", y = "Inc. rate/100000 inhab.") +
+    theme(plot.title = element_text(size = 17),
+          legend.text = element_text(size = 17),
+          legend.title = element_text(size = 17),
+          axis.title = element_text(size = 19),
+          axis.text = element_text(size = 18))+
   ggtitle(label = "20-59 years age group")
 
   
  
 
-f<-ggplot(data=db,aes(x=time_line,y=f6079,colour=as.factor(vac)))+
-  geom_point()+
-  geom_jitter(width = 0.5)+
-  annotate("text",x=db$time_line[102], y=max(db$f6079)+2, label= "2010",size=2.8)+
-  geom_smooth(method = "lm") +
-  geom_rect(data=db,aes(xmin = time_line[96], xmax = time_line[108], ymin = -Inf, ymax = Inf),
+f<-ggplot(data=db,aes(x=year,y=f6079,colour=as.factor(vac)))+
+  geom_line()+
+  #geom_jitter(width = 0.5)+
+  annotate("text",x=db$year[102], y=max(db$f6079)+2, label= "2010",size=4)+
+  #geom_smooth(method = "lm") +
+  geom_rect(data=db,aes(xmin = year[97], xmax = year[109], ymin = -Inf, ymax = Inf),
             fill = "lightgray", alpha = 0.02,linetype=0)+
-            xlab("Time (years)") + 
-            ylab("Inc. rate/100000 inhab.")+
             guides(col=guide_legend(title="Vaccine"))+
-            scale_x_date(date_breaks = "2 year",  date_labels = "%y")+
+            scale_x_continuous(breaks = seq(2003,2019,2))+
   scale_color_manual(breaks = c(0, 1),
   labels = lab,values=col)+
-  ggtitle(label = "60-79 years age group")
+   labs(x = "Time (years)", y = "Inc. rate/100000 inhab.") +
+    theme(plot.title = element_text(size = 17),
+          legend.text = element_text(size = 17),
+          legend.title = element_text(size = 17),
+          axis.title = element_text(size = 19),
+          axis.text = element_text(size = 18))+
+    ggtitle(label = "60-79 years age group")
 
   
-g<-ggplot(data=db,aes(x=time_line,y=fmm80,colour=as.factor(vac)))+
-  geom_point()+
-  geom_jitter(width = 0.5)+
-  annotate("text",x=db$time_line[102], y=max(db$fmm80)+2, label= "2010",size=2.8)+
-  geom_smooth(method = "lm") +
-  geom_rect(data=db,aes(xmin = time_line[96], xmax = time_line[108], ymin = -Inf, ymax = Inf),
+g<-ggplot(data=db,aes(x=year,y=fmm80,colour=as.factor(vac)))+
+  geom_line()+
+  #geom_jitter(width = 0.5)+
+  annotate("text",x=db$year[102], y=max(db$fmm80)+2, label= "2010",size=4)+
+  #geom_smooth(method = "lm") +
+  geom_rect(data=db,aes(xmin = year[97], xmax = year[109], ymin = -Inf, ymax = Inf),
             fill = "lightgray", alpha = 0.02,linetype=0)+
-            xlab("Time (years)") + 
-            ylab("Inc. rate/100000 inhab.")+
             guides(col=guide_legend(title="Vaccine"))+
-            scale_x_date(date_breaks = "2 year",  date_labels = "%y")+
+            scale_x_continuous(breaks = seq(2003,2019,2))+
   scale_color_manual(breaks = c(0, 1),
   labels = lab,values=col)+
-  ggtitle(label = ">80 years age group")
+   labs(x = "Time (years)", y = "Inc. rate/100000 inhab.") +
+    theme(plot.title = element_text(size = 17),
+          legend.text = element_text(size = 17),
+          legend.title = element_text(size = 17),
+          axis.title = element_text(size = 19),
+          axis.text = element_text(size = 18))+
+    ggtitle(label = ">80 years age group")
 
 jpeg(here("Figures","Fig2.jpg"), height = 10, width = 20, units = 'in', res=300)
 
