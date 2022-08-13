@@ -3,7 +3,7 @@
 
 # Description: 
 
-This time series study on the pneumonia incidence before and after the vaccination camping in Brazil. Pneumonia incidence during 18 years (2002-2019) was assessed using a dynamic linear regression. 
+This is a time series study on the pneumonia incidence before and after the vaccination camping in Brazil. Pneumonia incidence during 18 years (2002-2019) was assessed using a dynamic linear regression. 
 
 The results are published in a peer-reviewed paper in *Clinical and Biomedical Research* journal.
 
