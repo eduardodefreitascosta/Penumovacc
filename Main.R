@@ -44,7 +44,7 @@
 
 
 #Packages to be used
-packages<-c("readxl","here","tidyquant","tidyverse","lubridate","ggplot2","lme4","car","knitr","glmmsr","plotly","gridExtra","grid","ggridges","ggthemes","glmmTMB","bbmle","lattice","psych","lmtest","dynlm","GeneCycle","tseries","TTR","forecast","kableExtra")
+packages<-c("readxl","here","tidyquant","tidyverse","lubridate","ggplot2","lme4","car","knitr","glmmsr","plotly","gridExtra","grid","ggridges","ggthemes","bbmle","lattice","psych","lmtest","dynlm","GeneCycle","tseries","TTR","forecast","kableExtra")
 
 # Install packages not yet installed
 installed_packages <- packages %in% rownames(installed.packages())
@@ -76,4 +76,5 @@ source(here("Scripts","tidy_data.R"))
 # Run the analysis #
 ####################
 
+knitr::knit(here("Scripts","Incidencia8_11.Rmd"), output = here("Outputs","results.html"))
 
