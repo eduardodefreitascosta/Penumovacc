@@ -57,20 +57,6 @@ output:
 
 # Define knitr options ########################################################
 
-#Packages to be used
-packages<-c("readxl","here","tidyquant","tidyverse","lubridate","ggplot2","lme4","car","knitr","glmmsr","plotly","gridExtra","grid","ggridges","ggthemes","glmmTMB","bbmle","lattice","psych","lmtest","dynlm","GeneCycle","tseries","TTR","forecast","kableExtra")
-
-# Install packages not yet installed
-installed_packages <- packages %in% rownames(installed.packages())
-if (any(installed_packages == FALSE)) {
-  install.packages(packages[!installed_packages])
-}
-
-
-
-# Packages loading
-invisible(lapply(packages, library, character.only = TRUE))  
-
 
 # global options
 knitr::opts_chunk$set(message = FALSE)    # code default outputs

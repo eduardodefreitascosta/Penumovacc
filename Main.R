@@ -76,5 +76,5 @@ source(here("Scripts","tidy_data.R"))
 # Run the analysis #
 ####################
 
-knitr::knit(here("Scripts","Incidencia8_11.Rmd"), output = here("Outputs","results.html"))
+knitr::knit(here("Scripts","Incidencia8_11.Rmd"), output = here("Output","results.html"))
 
