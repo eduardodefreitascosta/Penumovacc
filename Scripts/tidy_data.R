@@ -140,11 +140,11 @@ obito$f6079<-apply(cbind(obito$f6069,obito$f7079),1,sum)
 
 
 
-obiton$f1019<-apply(cbind(obiton$f1014,obiton$f1519),1,sum)
+#obiton$f1019<-apply(cbind(obiton$f1014,obiton$f1519),1,sum)
 
-obiton$f2059<-apply(cbind(obiton$f2029,obiton$f3039,obiton$f4049,obiton$f5059),1,sum)
+#obiton$f2059<-apply(cbind(obiton$f2029,obiton$f3039,obiton$f4049,obiton$f5059),1,sum)
 
-obiton$f6079<-apply(cbind(obiton$f6069,obiton$f7079),1,sum)
+#obiton$f6079<-apply(cbind(obiton$f6069,obiton$f7079),1,sum)
 
 
 
@@ -154,7 +154,7 @@ obiton$f6079<-apply(cbind(obiton$f6069,obiton$f7079),1,sum)
 #For incidence
 conf_inc1<-incidencian[,2:16]-0
 #For death
-conf_obito<-obiton[,2:16]-0
+#conf_obito<-obiton[,2:16]-0
 
 ##Calculating lethality
 #PNM
