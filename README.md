@@ -1,4 +1,4 @@
-[![DOI](https://zenodo.org/badge/DOI/10.1016/j.mran.2022.100205.svg)](https://www.sciencedirect.com/science/article/pii/S2352352222000056)
+[![DOI](https://zenodo.org/badge/DOI/10.22491/2357-9730.124378.svg)](https://www.sciencedirect.com/science/article/pii/S2352352222000056)
 
 
 # Description: 
