@@ -1,7 +1,6 @@
 [![DOI](https://zenodo.org/badge/DOI/10.22491/2357-9730.124378.svg)](https://seer.ufrgs.br/index.php/hcpa/article/view/124378/88077)
 
 
-
 # Description:
 
 This is a time series study on pneumonia incidence before and after vaccination camping in Brazil. A dynamic linear regression assessed pneumonia incidence during 18 years (2002-2019).
